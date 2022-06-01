@@ -1,3 +1,4 @@
+using Microsoft.Extensions.FileProviders;
 using SignalRChat.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,7 +36,12 @@ app.UseHttpLogging();
 app.UseRouting();
 
 app.UseAuthorization();
-
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(builder.Environment.ContentRootPath, "files")),
+    RequestPath = "/files"
+});
 app.MapRazorPages();
 app.MapHub<GooseHub>("/chatHub");
 //app.UseWelcomePage();
